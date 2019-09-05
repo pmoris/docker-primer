@@ -1,0 +1,803 @@
+<!DOCTYPE html><html><head>
+      <title>intro-to-docker</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="file:////home/pieter/.vscode/extensions/shd101wyy.markdown-preview-enhanced-0.4.3/node_modules/@shd101wyy/mume/dependencies/katex/katex.min.css">
+      
+      
+
+      
+      
+      
+      
+      
+      
+
+      <style>
+      /**
+ * prism.js Github theme based on GitHub's theme.
+ * @author Sam Clarke
+ */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #333;
+  background: none;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.4;
+
+  -moz-tab-size: 8;
+  -o-tab-size: 8;
+  tab-size: 8;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+  padding: .8em;
+  overflow: auto;
+  /* border: 1px solid #ddd; */
+  border-radius: 3px;
+  /* background: #fff; */
+  background: #f5f5f5;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+  white-space: normal;
+  background: #f5f5f5;
+}
+
+.token.comment,
+.token.blockquote {
+  color: #969896;
+}
+
+.token.cdata {
+  color: #183691;
+}
+
+.token.doctype,
+.token.punctuation,
+.token.variable,
+.token.macro.property {
+  color: #333;
+}
+
+.token.operator,
+.token.important,
+.token.keyword,
+.token.rule,
+.token.builtin {
+  color: #a71d5d;
+}
+
+.token.string,
+.token.url,
+.token.regex,
+.token.attr-value {
+  color: #183691;
+}
+
+.token.property,
+.token.number,
+.token.boolean,
+.token.entity,
+.token.atrule,
+.token.constant,
+.token.symbol,
+.token.command,
+.token.code {
+  color: #0086b3;
+}
+
+.token.tag,
+.token.selector,
+.token.prolog {
+  color: #63a35c;
+}
+
+.token.function,
+.token.namespace,
+.token.pseudo-element,
+.token.class,
+.token.class-name,
+.token.pseudo-class,
+.token.id,
+.token.url-reference .token.variable,
+.token.attr-name {
+  color: #795da3;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+.token.title,
+.token.title .token.punctuation {
+  font-weight: bold;
+  color: #1d3e81;
+}
+
+.token.list {
+  color: #ed6a43;
+}
+
+.token.inserted {
+  background-color: #eaffea;
+  color: #55a532;
+}
+
+.token.deleted {
+  background-color: #ffecec;
+  color: #bd2c00;
+}
+
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+
+/* JSON */
+.language-json .token.property {
+  color: #183691;
+}
+
+.language-markup .token.tag .token.punctuation {
+  color: #333;
+}
+
+/* CSS */
+code.language-css,
+.language-css .token.function {
+  color: #0086b3;
+}
+
+/* YAML */
+.language-yaml .token.atrule {
+  color: #63a35c;
+}
+
+code.language-yaml {
+  color: #183691;
+}
+
+/* Ruby */
+.language-ruby .token.function {
+  color: #333;
+}
+
+/* Markdown */
+.language-markdown .token.url {
+  color: #795da3;
+}
+
+/* Makefile */
+.language-makefile .token.symbol {
+  color: #795da3;
+}
+
+.language-makefile .token.variable {
+  color: #183691;
+}
+
+.language-makefile .token.builtin {
+  color: #0086b3;
+}
+
+/* Bash */
+.language-bash .token.keyword {
+  color: #0086b3;
+}
+
+/* highlight */
+pre[data-line] {
+  position: relative;
+  padding: 1em 0 1em 3em;
+}
+pre[data-line] .line-highlight-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: transparent;
+  display: block;
+  width: 100%;
+}
+
+pre[data-line] .line-highlight {
+  position: absolute;
+  left: 0;
+  right: 0;
+  padding: inherit 0;
+  margin-top: 1em;
+  background: hsla(24, 20%, 50%,.08);
+  background: linear-gradient(to right, hsla(24, 20%, 50%,.1) 70%, hsla(24, 20%, 50%,0));
+  pointer-events: none;
+  line-height: inherit;
+  white-space: pre;
+}
+
+pre[data-line] .line-highlight:before, 
+pre[data-line] .line-highlight[data-end]:after {
+  content: attr(data-start);
+  position: absolute;
+  top: .4em;
+  left: .6em;
+  min-width: 1em;
+  padding: 0 .5em;
+  background-color: hsla(24, 20%, 50%,.4);
+  color: hsl(24, 20%, 95%);
+  font: bold 65%/1.5 sans-serif;
+  text-align: center;
+  vertical-align: .3em;
+  border-radius: 999px;
+  text-shadow: none;
+  box-shadow: 0 1px white;
+}
+
+pre[data-line] .line-highlight[data-end]:after {
+  content: attr(data-end);
+  top: auto;
+  bottom: .4em;
+}html body{font-family:"Helvetica Neue",Helvetica,"Segoe UI",Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ul,html body>ol{margin-bottom:16px}html body ul,html body ol{padding-left:2em}html body ul.no-list,html body ol.no-list{padding:0;list-style-type:none}html body ul ul,html body ul ol,html body ol ol,html body ol ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:bold;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:bold}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em !important;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::before,html body code::after{letter-spacing:-0.2em;content:"\00a0"}html body pre>code{padding:0;margin:0;font-size:.85em !important;word-break:normal;white-space:pre;background:transparent;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;font-size:.85em !important;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:before,html body pre tt:before,html body pre code:after,html body pre tt:after{content:normal}html body p,html body blockquote,html body ul,html body ol,html body dl,html body pre{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body pre,html body code{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview .pagebreak,.markdown-preview .newpage{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center !important}.markdown-preview:not([for="preview"]) .code-chunk .btn-group{display:none}.markdown-preview:not([for="preview"]) .code-chunk .status{display:none}.markdown-preview:not([for="preview"]) .code-chunk .output-div{margin-bottom:16px}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0}@media screen and (min-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px + 2em)}}@media screen and (max-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{font-size:14px !important;padding:1em}}@media print{html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,0.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{padding:0 1.6em;margin-top:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc li{margin-bottom:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{list-style-type:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% -  300px);padding:2em calc(50% - 457px -  150px);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+@font-face {
+  font-family: 'Fira Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Fira Sans Regular'), local('FiraSans-Regular'), url(https://fonts.gstatic.com/s/firasans/v10/va9E4kDNxMZdWfMOD5Vvl4jO.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Source Code Pro';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Source Code Pro Regular'), local('SourceCodePro-Regular'), url(https://fonts.gstatic.com/s/sourcecodepro/v11/HI_SiYsKILxRpg3hIP6sJ7fM7PqlPevT.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Open Sans Condensed';
+  font-style: italic;
+  font-weight: 300;
+  src: local('Open Sans Condensed Light Italic'), local('OpenSansCondensed-LightItalic'), url(http://fonts.gstatic.com/s/opensanscondensed/v14/z7NHdQDnbTkabZAIOl9il_O6KJj73e7Fd_-7suD8Rb2Q.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Open Sans Condensed';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Open Sans Condensed Light'), local('OpenSansCondensed-Light'), url(http://fonts.gstatic.com/s/opensanscondensed/v14/z7NFdQDnbTkabZAIOl9il_O6KJj73e7Ff1GhDuXMQg.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Open Sans Condensed';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Open Sans Condensed Bold'), local('OpenSansCondensed-Bold'), url(http://fonts.gstatic.com/s/opensanscondensed/v14/z7NFdQDnbTkabZAIOl9il_O6KJj73e7Ff0GmDuXMQg.ttf) format('truetype');
+}
+.markdown-preview.markdown-preview html {
+  font-size: 18px;
+  max-width: 100%;
+}
+.markdown-preview.markdown-preview body {
+  color: #444;
+  font-family: 'Fira Sans', sans-serif;
+  font-weight: 300;
+  margin: 0 auto;
+  max-width: 48rem;
+  line-height: 1.45;
+  padding: 0.25rem;
+}
+@media print {
+  .markdown-preview.markdown-preview *,
+  .markdown-preview.markdown-preview *:before,
+  .markdown-preview.markdown-preview *:after {
+    background: transparent !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  .markdown-preview.markdown-preview a,
+  .markdown-preview.markdown-preview a:visited {
+    text-decoration: underline;
+  }
+  .markdown-preview.markdown-preview a[href]:after {
+    content: " (" attr(href) ")";
+  }
+  .markdown-preview.markdown-preview abbr[title]:after {
+    content: " (" attr(title) ")";
+  }
+  .markdown-preview.markdown-preview a[href^="#"]:after,
+  .markdown-preview.markdown-preview a[href^="javascript:"]:after {
+    content: "";
+  }
+  .markdown-preview.markdown-preview pre,
+  .markdown-preview.markdown-preview blockquote {
+    border: 1px solid #999;
+    page-break-inside: avoid;
+  }
+  .markdown-preview.markdown-preview thead {
+    display: table-header-group;
+  }
+  .markdown-preview.markdown-preview tr,
+  .markdown-preview.markdown-preview img {
+    page-break-inside: avoid;
+  }
+  .markdown-preview.markdown-preview img {
+    max-width: 100% !important;
+  }
+  .markdown-preview.markdown-preview p,
+  .markdown-preview.markdown-preview h2,
+  .markdown-preview.markdown-preview h3 {
+    orphans: 3;
+    widows: 3;
+  }
+  .markdown-preview.markdown-preview h2,
+  .markdown-preview.markdown-preview h3 {
+    page-break-after: avoid;
+  }
+}
+.markdown-preview.markdown-preview pre {
+  padding: 0.5rem;
+  line-height: 1.25;
+  overflow-x: scroll;
+}
+.markdown-preview.markdown-preview a,
+.markdown-preview.markdown-preview a:visited {
+  color: #3498db;
+}
+.markdown-preview.markdown-preview a:hover,
+.markdown-preview.markdown-preview a:focus,
+.markdown-preview.markdown-preview a:active {
+  color: #2980b9;
+}
+.markdown-preview.markdown-preview .modest-no-decoration {
+  text-decoration: none;
+}
+.markdown-preview.markdown-preview body {
+  line-height: 1.85;
+}
+.markdown-preview.markdown-preview p,
+.markdown-preview.markdown-preview .modest-p {
+  font-size: 1rem;
+  font-family: 'Fira Sans', sans-serif;
+  margin-bottom: 1.3rem;
+  color: #444;
+}
+.markdown-preview.markdown-preview h1,
+.markdown-preview.markdown-preview .modest-h1,
+.markdown-preview.markdown-preview h2,
+.markdown-preview.markdown-preview .modest-h2,
+.markdown-preview.markdown-preview h3,
+.markdown-preview.markdown-preview .modest-h3,
+.markdown-preview.markdown-preview h4,
+.markdown-preview.markdown-preview .modest-h4 {
+  margin: 1.414rem 0 0.5rem;
+  font-weight: inherit;
+  line-height: 1.42;
+}
+.markdown-preview.markdown-preview img,
+.markdown-preview.markdown-preview canvas,
+.markdown-preview.markdown-preview iframe,
+.markdown-preview.markdown-preview video,
+.markdown-preview.markdown-preview svg,
+.markdown-preview.markdown-preview select,
+.markdown-preview.markdown-preview textarea {
+  max-width: 100%;
+}
+.markdown-preview.markdown-preview h1,
+.markdown-preview.markdown-preview h2,
+.markdown-preview.markdown-preview h3,
+.markdown-preview.markdown-preview h4,
+.markdown-preview.markdown-preview h5,
+.markdown-preview.markdown-preview h6 {
+  color: #444;
+  font-family: 'Fira Sans Book', Helvetica, sans-serif;
+}
+.markdown-preview.markdown-preview h1,
+.markdown-preview.markdown-preview h2,
+.markdown-preview.markdown-preview h3 {
+  border-bottom: 2px solid #fafafa;
+  margin-bottom: 1.15rem;
+  padding-bottom: 0.5rem;
+  text-align: center;
+}
+.markdown-preview.markdown-preview blockquote {
+  border-left: 8px solid #fafafa;
+  padding: 1rem;
+}
+.markdown-preview.markdown-preview pre,
+.markdown-preview.markdown-preview code {
+  background-color: #fafafa;
+  font-family: 'Source Code', "Courier New", monospace;
+}
+
+      </style>
+    </head>
+    <body for="html-export">
+      <div class="mume markdown-preview  ">
+      <div class="code-chunk" data-id="code-chunk-id-0" data-cmd="toc"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>&#x25B6;&#xFE0E;</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><ul>
+<li><a href="#a-brief-introduction-to-docker">A brief introduction to Docker</a>
+<ul>
+<li><a href="#a-few-definitions">A few definitions</a></li>
+<li><a href="#the-benefits-of-containers">The benefits of containers</a></li>
+<li><a href="#hello-world">Hello world!</a></li>
+<li><a href="#images">Images</a>
+<ul>
+<li><a href="#docker-hub">Docker Hub</a></li>
+<li><a href="#creating-images">Creating images</a></li>
+</ul>
+</li>
+<li><a href="#walking-before-running">Walking before <code>run</code>ning</a>
+<ul>
+<li><a href="#naming-containers">Naming containers</a></li>
+<li><a href="#interacting-with-containers">Interacting with containers</a></li>
+</ul>
+</li>
+<li><a href="#cleaning-up-after-yourself">Cleaning up after yourself</a></li>
+<li><a href="#dockerfiles">Dockerfiles</a>
+<ul>
+<li><a href="#cmd-vs-run-vs-entrypoint">CMD vs RUN vs ENTRYPOINT</a></li>
+<li><a href="#shell-form-vs-exec-form">Shell form vs exec form</a></li>
+<li><a href="#backslashes-in-shell-syntax">Backslashes in shell syntax</a></li>
+<li><a href="#best-practices-and-efficient-images">Best practices and efficient images</a></li>
+<li><a href="#background-processes">Background processes</a></li>
+</ul>
+</li>
+<li><a href="#managing-data">Managing data</a></li>
+<li><a href="#when-things-go-wrong">When things go wrong</a></li>
+<li><a href="#docker-compose">Docker-compose</a></li>
+</ul>
+</li>
+<li><a href="#resources">Resources</a></li>
+</ul>
+<h1 class="mume-header" id="a-brief-introduction-to-docker">A brief introduction to Docker</h1>
+
+<p>Docker is an open-source containerization tool. It allows you to package and run an application (or even just a script or a simple command) in a <em>container</em>, an isolated sandbox that runs on your host (local) operating system (OS). The container will not only contain the application itself, but also all of its dependencies, including a (stripped-down) operating system.</p>
+<p>Containers are often used for deploying application on a server, since they are straight-forward to migrate and scale-up, but they can also be a real asset in reproducible science! By providing a docker image of your application or even just an analysis pipeline, others will be able to run the code in the exact same environment you originally implemented it.</p>
+<p><img src="assets/containers.jpeg" alt></p>
+<p>They are similar to virtual machines (VMs), but there are two distinguishing features that set them apart (<a href="https://docs.docker.com/get-started/#containers-and-virtual-machines">see official docs</a>). First of all, from a technical standpoint, containers perform fewer emulation tasks since they share the host OS&apos; kernel.<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup> A process running in a container will use the same amount of memory as a native process. VMs on the other hand rely on virtualized hardware to run a completely isolated guest OS. Secondly, while virtual machines are often used in an interactive manner, by providing the user with a full OS-in-a-box that they can use just like a standard desktop, containers are intended to run as one-off instances, but more on that later.</p>
+<h3 class="mume-header" id="a-few-definitions">A few definitions</h3>
+
+<ul>
+<li>host machine: this is the operating system that is running the docker service and launching containers. It might be your own computer, a web server in the cloud or even another docker process.</li>
+<li>container: a temporary environment, based on an image, which runs an application.</li>
+<li>image: a snapshot or blueprint of an application or system, containing an operating system, dependencies, applications, files, background processes, etc. Containers are created from an image state. Images are built on top of each other in a hierarchical manner.</li>
+</ul>
+<h2 class="mume-header" id="the-benefits-of-containers">The benefits of containers</h2>
+
+<ul>
+<li><strong>Reproducibility</strong>
+<ul>
+<li>across operating systems (with some caveats <sup class="footnote-ref"><a href="#fn1" id="fnref1:1">[1:1]</a></sup>)</li>
+<li>dependency management</li>
+<li>it works on my machine<br>
+<img src="assets/mymachine.jpg" alt></li>
+</ul>
+</li>
+<li>Running software/scripts/commands <strong>without installing</strong> them or any of their dependencies manually
+<ul>
+<li>no need to dig through poor installation documentation or debug obscure compilation errors</li>
+<li>long lists of required dependencies are things of the past</li>
+<li>software and dependencies you don&apos;t plan to use often will not pollute your system library</li>
+<li>no installation privileges required</li>
+</ul>
+</li>
+<li>Comparing <strong>different versions</strong> of software side-by-side (or testing your software in different environments)</li>
+<li>Easier transition from <strong>development to production</strong> environment in the case of web applications
+<ul>
+<li>local and production environment <em>should</em> behave exactly the same.</li>
+</ul>
+</li>
+</ul>
+<h2 class="mume-header" id="hello-world">Hello world!</h2>
+
+<p>We&apos;ll first create a very simple docker application, and then delve into its components step by step.</p>
+<pre data-role="codeBlock" data-info class="language-"><code>docker run -it --rm debian echo &apos;Hello world!&apos;
+</code></pre><pre data-role="codeBlock" data-info class="language-"><code>Hello world!
+</code></pre><p>Congrats, you&apos;ve just run your first docker container!</p>
+<p>Let&apos;s unpack what has happened here:</p>
+<ol>
+<li><code>docker run</code> attempts to launch a container.</li>
+<li>The container is based on the image named <code>debian</code>.</li>
+<li><code>-it</code> is a flag that tells docker to redirect the container&apos;s input/output/error streams to our host&apos;s terminal. <code>--rm</code> removes the container after it has finished running.</li>
+</ol>
+<p>Don&apos;t worry though, we&apos;ll go over everything in more detail step by step. Starting with...</p>
+<h2 class="mume-header" id="images">Images</h2>
+
+<p>Containers, the isolated instances that run a specific application, are always based on an image. You can think of the image as a <strong>blueprint</strong> or a system snapshot. It defines a system environment, any required libraries, the file system and (configuration) files, and even things like background processes or  necessary preparatory steps. In a nutshell, all the steps we would have to perform on our own operating system before we can use the desired application.</p>
+<h3 class="mume-header" id="docker-hub">Docker Hub</h3>
+
+<p>The <a href="https://hub.docker.com/explore/">Docker Hub</a> is an only repository where you can browse images made by both regular users and so called <a href="https://docs.docker.com/docker-hub/official_images/"><em>Official Images</em></a>, a curated set generally consisting of base operating systems (e.g. <a href="https://hub.docker.com/_/debian">debian</a>, <a href="https://hub.docker.com/_/ubuntu">ubuntu</a> and <a href="https://hub.docker.com/_/busybox">busybox</a><sup class="footnote-ref"><a href="#fn2" id="fnref2">[2]</a></sup> and ready-to-go containers for popular frameworks and languages (e.g. <a href="https://hub.docker.com/_/python">python</a>, <a href="https://hub.docker.com/r/rocker/r-ver">R</a>, <a href="https://hub.docker.com/_/node/">nodejs</a>).</p>
+<h3 class="mume-header" id="creating-images">Creating images</h3>
+
+<p>Images are hierarchical. Most of the images you will create yourself will be based on a previous, more general parent image, often one of those Official Images, but perhaps in a certain situation it makes more sense to base an image on one of your own.</p>
+<p>You can list all of the images that are available on your system as follows:</p>
+<div class="code-chunk" data-id="code-chunk-id-1" data-cmd="bash"><div class="input-div"><pre data-role="codeBlock" data-info="bash {code_chunk_offset=1, cmd=true}" class="language-bash">docker image <span class="token function">ls</span>
+</pre><div class="btn-group"><div class="run-btn btn"><span>&#x25B6;&#xFE0E;</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><p>[todo]<br>
+<small>You might notice a bunch of duplicates tagged as <code>&lt;none&gt;</code>. Don&apos;t worry, these images only take up space once.</small></p>
+<p>And you can obtain a specific image manually using the <code>docker pull</code>. The names are formatted like  [todo],, version. Many images allow you to either specify a version or just use the latest available (stable) version (often labeled <code>latest</code> or <code>stable</code>). Some images also provide a <code>slim</code> version, these are usually light-weight images lacking most functionality apart from only those things that are required to run a specific application. These are a good bet if you want to reduce the file size of your images (but more on that later).</p>
+<p>Most of the time however, you won&apos;t be using the <code>pull</code> command yourself, instead, you&apos;ll either run a container based on an image directly and docker will download the required image automatically (as in the <em>Hello World</em> example) or you will build your own image based on a <code>Dockerfile</code>. We&apos;ll go over those in a bit, but let us first dive into <code>run</code> statements and existing images.</p>
+<h2 class="mume-header" id="walking-before-running">Walking before <code>run</code>ning</h2>
+
+<p>Let us explore the <code>docker run</code> command in some more detail, without worrying about <em>what exactly it is that we&apos;re running</em>.</p>
+<p>The simplest form of a run command would be something along the lines of the following:</p>
+<div class="code-chunk" data-id="code-chunk-id-2" data-cmd="bash"><div class="input-div"><pre data-role="codeBlock" data-info="bash {code_chunk_offset=2, cmd=true}" class="language-bash">docker run debian
+</pre><div class="btn-group"><div class="run-btn btn"><span>&#x25B6;&#xFE0E;</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><p>Which produces no output... Huh? What&apos;s going on here?</p>
+<p>Well, the above command spins up a container that is based on the base <code>debian</code> image. You can look up details (and the <code>Dockerfile</code>) of this image <a href="https://hub.docker.com/_/debian">here</a>. You will see that there are multiple versions of this image, so-called <em>tags</em>. It&apos;s a good practice to always specify the correct version tag of images, since a tag like <em>latest</em> is not static in time.</p>
+<p>This image has a command that specifies the process it will run, which is simply: <code>CMD [&quot;bash&quot;]</code>.</p>
+<p>When we issue the above command, behind the scenes a container will start, and our supplied command (which is empty) will be passed on to this <code>bash</code> statement. Having nothing to do, the container will simply shut down itself immediately.</p>
+<p>Instead, we can pass an argument like we did in the <em>Hello World</em> example.</p>
+<div class="code-chunk" data-id="code-chunk-id-3" data-cmd="bash"><div class="input-div"><pre data-role="codeBlock" data-info="bash {code_chunk_offset=3, cmd=true}" class="language-bash">docker run debian <span class="token keyword">echo</span> <span class="token string">&quot;The current working directory is <span class="token variable"><span class="token variable">$(</span><span class="token function">pwd</span><span class="token variable">)</span></span>&quot;</span> \
+                    <span class="token operator">&amp;&amp;</span> <span class="token function">cd</span> /var/ \
+                    <span class="token operator">&amp;&amp;</span> <span class="token keyword">echo</span> <span class="token string">&quot;the contents of /var/ are&quot;</span> \
+                    <span class="token operator">&amp;&amp;</span> <span class="token function">ls</span> -l
+</pre><div class="btn-group"><div class="run-btn btn"><span>&#x25B6;&#xFE0E;</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><p><small>If you&apos;re not familiar with the <code>&amp;&amp;</code> syntax, it is a way to chain multiple commands into one statement. Each subsequent command will only be executed after the previous one is finished (succesfully).</small></p>
+<p>To see a list of active containers, the <code>docker container ls</code> command can be used. What do you think we&apos;ll see when we run it at this point?</p>
+<div class="code-chunk" data-id="code-chunk-id-4" data-cmd="bash"><div class="input-div"><pre data-role="codeBlock" data-info="bash {code_chunk_offset=4, cmd=true}" class="language-bash">docker container <span class="token function">ls</span>
+</pre><div class="btn-group"><div class="run-btn btn"><span>&#x25B6;&#xFE0E;</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><p>If you guessed nothing, you were right. The list is still empty because the container shut down itself after running the final <code>ls -l</code> command. Containers do their job and then shut down.</p>
+<p>There is however a more useful variant of the <code>container ls</code> command that we can run:</p>
+<div class="code-chunk" data-id="code-chunk-id-5" data-cmd="bash"><div class="input-div"><pre data-role="codeBlock" data-info="bash {code_chunk_offset=5, cmd=true}" class="language-bash">docker container <span class="token function">ls</span> --all
+</pre><div class="btn-group"><div class="run-btn btn"><span>&#x25B6;&#xFE0E;</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><p>The <code>STATUS</code> column tells us when and how these containers exited (an exit status of 0 in linux means that a command was run without any problems arising).</p>
+<p>All of this brings us to one of the most important aspects of docker containers.</p>
+<blockquote>
+<p><strong>Docker containers are ephemeral.</strong></p>
+</blockquote>
+<p>Containers are short-lived. They are created after a specific state of a system (described in the image), will do whatever it is you instructed them to do, and then disappear. They will leave no traces.</p>
+<p>We can demonstrate this behaviour by running two containers in a row.</p>
+<div class="code-chunk" data-id="code-chunk-id-6" data-cmd="bash"><div class="input-div"><pre data-role="codeBlock" data-info="bash {code_chunk_offset=6, cmd=true}" class="language-bash">docker run debian <span class="token function">tee</span> <span class="token string">&apos;cowabunga!&apos;</span> /home/pizza
+docker run debian <span class="token function">ls</span> -l /home
+</pre><div class="btn-group"><div class="run-btn btn"><span>&#x25B6;&#xFE0E;</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><p><em>Always keep this in the back of your mind. It will be extremely important when you start relying on containers to produce (and hopefully store) the output of a certain analysis.</em></p>
+<h3 class="mume-header" id="naming-containers">Naming containers</h3>
+
+<p>Docker containers are given an ID automatically (e.g. <code>7a0c1129df9a</code>), but this is rather cumbersome. Instead, you can use the <code>--name</code> flag to specify your own name to refer to a specific container.</p>
+<h3 class="mume-header" id="interacting-with-containers">Interacting with containers</h3>
+
+<p>Most of the time we want to run a container in the background, but there are a few situations where interaction can be useful. Debugging is one of them. Trying out small parts of an image you are creating is another.</p>
+<p>The easiest way is to pass the <code>-it</code> flag (allocates a tty) and specify a shell command such as <code>sh</code> (for the minimal <code>busybox</code> images) or <code>bash</code> (in most of the linux-based images). Give it a try!</p>
+<pre class="language-text">docker run -it debian bash
+</pre>
+<p><small>Use <code>&lt;ctrl&gt;+d</code> or type <code>exit</code> to leave (and shut down) the container.</small></p>
+<p>This is quite useful whenever you&apos;re unsure of the exact file structure your image has. I.e., you can write a Dockerfile, add some files, then run it interactively to see if everything is where it&apos;s supposed to be. In a similar vein, I&apos;ve found it useful to figure out file permissions and user ids.</p>
+<p>If you&apos;re feeling adventurous, this also allows you to finally witness what happens when you run a command like <code>rm --rf</code>. I&apos;m not liable when you accidentally run it in your host terminal instead of the container though!</p>
+<p>Another method is provided by the <code>exec</code> command (<a href="https://docs.docker.com/engine/reference/commandline/exec/">see docs</a>), which can inject a command into any containers <em>that is already running</em>. For example:</p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash">docker run -it --rm --name sleepy_debian -d debian <span class="token function">sleep</span> 100
+docker container <span class="token function">ls</span>
+docker <span class="token function">exec</span> -it sleepy_debian <span class="token function">bash</span>
+</pre><p>Note that we used <code>--name</code> to give the container a name, rather than relying on the long ID, and we used the <code>-it</code> flag again to enter interactive mode.</p>
+<h2 class="mume-header" id="cleaning-up-after-yourself">Cleaning up after yourself</h2>
+
+<p>To clean up all these unused containers you have collected (see <code>docker container ls --all</code>), you can use the <code>prune</code> commands:</p>
+<p><code>docker container prune</code></p>
+<p>Or you can issue the <code>--rm</code> flag to your <code>run</code> statements. This will ensure that containers are removed after they shut down.</p>
+<p>There also exists a prune command for images (and other docker entities), so have a look at the docs <a href="https://docs.docker.com/config/pruning/">https://docs.docker.com/config/pruning/</a> for more information on how these pruning commands behave.</p>
+<h2 class="mume-header" id="dockerfiles">Dockerfiles</h2>
+
+<p>Dockerfiles are the meat and potatoes of docker. All the images we have used so far, are based on a Dockerfile as well. You can inspect it by clicking on the tag names in Docker Hub.</p>
+<p>Rather than relying on pre-existing images, we will build our own. Here is an example:</p>
+<pre class="language-text"># Use an official Python runtime as a parent image
+FROM python:slim
+
+# Ensure that Python outputs everything that&apos;s printed inside # the application rather than buffering it.
+ENV PYTHONUNBUFFERED 1
+
+# Set the file maintainer (your name - the file&apos;s author)
+MAINTAINER Splinter
+
+# Set environment variables
+ENV MY_DIR=/opt/technodrome
+
+# ARG variables are only available during the build process
+ARG USERID=999
+ARG GROUPID=999
+
+# Copy a pip requirements file, install packages and remove the leftovers
+COPY requirements.txt /tmp/
+RUN pip install --no-cache-dir -r /tmp/requirements.txt &amp;&amp; \
+    rm -rf /tmp/requirements.txt
+
+# Install required packages via apt and clean up
+RUN apt-get update \
+    &amp;&amp; apt-get install -y --no-install-recommends \
+        cowsay \
+    &amp;&amp; rm -rf /var/lib/apt/lists/*
+
+# Create a non-root user (optional!)
+RUN groupadd -r -g ${GROUPID} tmnt &amp;&amp; \
+    useradd -r -g Donatello -u ${USERID} -s /sbin/nologin Donatello
+
+# Make port 8000 available to the world outside this container
+EXPOSE 8000
+
+# Copy the current directory contents into the container at /app
+COPY . /opt/src
+
+# Copy source (and data files)
+RUN echo &quot;important ninja business&quot; &gt; ${MY_DIR}/ooze.txt
+
+# Remove windows new lines and set correct permissions
+# NOTE: initialize empty directory for shared static volume!
+#       otherwise the permissions will be lost!
+RUN sed -i &apos;s/\r//&apos; /opt/src/scripts/* &amp;&amp; \
+    chmod -R +x /opt/src/scripts &amp;&amp; \
+    chown -R Donatello /opt/src
+
+# Change to non-root user
+USER Donatello
+
+# Set the working directory
+WORKDIR /opt/src
+
+# Entrypoint to perform Django static file collection
+ENTRYPOINT [&quot;bash&quot;, &quot;./scripts/pizza-time.sh&quot;]
+
+# Run your script
+# CMD [&quot;./scripts/shell-shocked.sh&quot;]
+</pre>
+<h3 class="mume-header" id="cmd-vs-run-vs-entrypoint">CMD vs RUN vs ENTRYPOINT</h3>
+
+<p>The difference between these is explained in more detail <a href="https://goinbigdata.com/docker-run-vs-cmd-vs-entrypoint/">here</a> and <a href="https://aboullaite.me/dockerfile-run-vs-cmd-vs-entrypoint/">here</a>.</p>
+<p>In a nutshell:</p>
+<ul>
+<li><code>RUN</code> statements are used to configure things inside the image, e.g. installing software. The state of the final image is post-these-operations.</li>
+<li>The <code>CMD</code> statement defines the command that is executed by default when a container is created from the image. Note however, that you can override this value by passing another command via the command line, e.g. <code>docker run image &lt;command-here&gt;</code></li>
+<li><code>ENTRYPOINT</code> statements cannot be be (easily) overridden from the command line. They should be used</li>
+</ul>
+<h3 class="mume-header" id="shell-form-vs-exec-form">Shell form vs exec form</h3>
+
+<p>Inside a Dockerfile (and also <a href="#docker-compose">compose files</a>) there are two forms of defining commands (for <code>ENTRYPOINT</code>, <code>CMD</code> and <code>RUN</code> statements).</p>
+<ul>
+<li>exec form: <code>ENTRYPOINT [&quot;executable&quot;, &quot;param1&quot;, &quot;param2&quot;]</code></li>
+<li>shell form: <code>ENTRYPOINT command param1 param2</code></li>
+</ul>
+<p>The former is <a href="https://docs.docker.com/engine/reference/builder/#entrypoint">prefered by the docs</a>, and more information can be found <a href="https://nickjanetakis.com/blog/docker-tip-63-difference-between-an-array-and-string-based-cmd">here</a> and <a href="https://gmaslowski.com/docker-shell-vs-exec/">here</a>.</p>
+<p>However, the exec form does not perform all types of shel processing, e.g. variable expansion will not occur (because the statement is processed by docker instead of the shell inside the container). <a href="https://docs.docker.com/engine/reference/builder/#run">See here</a>.</p>
+<h3 class="mume-header" id="backslashes-in-shell-syntax">Backslashes in shell syntax</h3>
+
+<p>You can use a <code>\</code> to split a command over multiple lines:</p>
+<pre class="language-text">RUN pip install --no-cache-dir -r /tmp/requirements.txt &amp;&amp; \
+    rm -rf /tmp/requirements.txt
+</pre>
+<h3 class="mume-header" id="best-practices-and-efficient-images">Best practices and efficient images</h3>
+
+<p>Poorly written Dockerfiles can lead to oversized images, so I recommend having a look at <a href="https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user">some best practices</a>. A major remark is to keep the number of statements (or layers) to a minimum. You can do this by combining multiple <code>RUN</code> statements into one:</p>
+<pre class="language-text">RUN apt-get update &amp;&amp; apt-get install -y \
+    aufs-tools \
+    automake \
+    build-essential \
+    curl \
+    dpkg-sig \
+    libcap-dev \
+    libsqlite3-dev \
+    mercurial \
+    reprepro \
+    ruby1.9.1 \
+    ruby1.9.1-dev \
+    s3cmd=1.1.* \
+&amp;&amp; rm -rf /var/lib/apt/lists/*
+</pre>
+<h3 class="mume-header" id="background-processes">Background processes</h3>
+
+<p>Sometimes you want processes to run in the background, i.e. you do not want all the output to appear on your terminal. To do that, you can use the <code>-d/--detach</code> flag.</p>
+<h2 class="mume-header" id="managing-data">Managing data</h2>
+
+<p>You&apos;ve seen that you can use a <code>COPY</code> statement to get files into your container. And you also know that containers are temporary. So does that imply you lose all of the output your process generates?</p>
+<p>That brings us to <em>volumes</em>. A complete overview is given in <a href="https://docs.docker.com/storage/volumes/">the docs</a>.</p>
+<p>There are two types of volumes: bind mounts and named volumes.</p>
+<p>With bind mounts, you mount a directory on your host machine on top of a directory inside of your container.</p>
+<div class="code-chunk" data-id="code-chunk-id-7" data-cmd="bash"><div class="input-div"><pre data-role="codeBlock" data-info="bash {code_chunk_offset=7, cmd=true}" class="language-bash"><span class="token function">mkdir</span> -P bind_mount_test
+<span class="token function">touch</span> bind_mount_test/krang
+docker run -it --rm -v /my/local/dir:/container/dir
+</pre><div class="btn-group"><div class="run-btn btn"><span>&#x25B6;&#xFE0E;</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><p>What is important to take note of here is that the bind mount will override anything that is in your container. For example, suppose we have a statement like <code>COPY . /src</code> in our Dockerfile (which would initialise a directory in the image located in <code>/src</code> containing all files in your local working directory). However, when you bind mount something on top of <code>/src</code>, it will override its contents. This ensures that you never accidentally wipe data on your host machine by replacing it with things inside an image. Remember, the image is self-sufficient and contains all information it would ever require, your host machine is not.</p>
+<p>Also note that the first filepath (the one on the host machine), cannot be a relative path, it must be the full filepath.</p>
+<p>Named volumes are the second type of volume. Instead of mounting a host directory, they simply give a name to a directory inside of your container. After the container is finished (and/or removed), the volume will remain. You can then later mount it again or retrieve data from it directly. They use the same syntax as bind mounts, but replace the first filepath into a name, e.g. <code>-v my_volume:/my/container/path</code>.</p>
+<p>Finally, there is also an option to copy data directly into a <em>running</em> container: <a href="https://docs.docker.com/engine/reference/commandline/cp/">https://docs.docker.com/engine/reference/commandline/cp/</a>.</p>
+<h2 class="mume-header" id="when-things-go-wrong">When things go wrong</h2>
+
+<p>When things go wrong, and trust me, they almost always do, you will need some tricks to figure out what&apos;s going on. Like always, google is your best friend in this regard. Docker&apos;s documentation is also quite extensive and I highly recommend you consult it when trying out new features. That being said, it will likely take some time and experience before you will be able to completely digest everything and understand all implications that a certain explanation might have on seemingly unrelated aspects of Docker.</p>
+<p>Unfortunately, it is likely you will hit a few bumps when you attempt to configure your first containers (or set of containers).</p>
+<h2 class="mume-header" id="docker-compose">Docker-compose</h2>
+
+<p>Generally, containers should only be doing one thing. There might be a few background processes running (indeed, there&apos;s usually an entire linux OS running), and there&apos;s nothing wrong with running multiple scripts in a row (the script calling the pipeline itself can be considered the _&quot;one thing&quot;.), but as soon as you find yourself trying to run multiple things simultaneously, you should reach for <code>docker-compose</code>.</p>
+<p>Docker-compose allows you to orchestrate multiple containers as one unit. This is useful for things like web applications that require a web server, load balancer, database, etc.</p>
+<p>Docker-compose is managed by <code>docker-compose.yml</code> files, which are YAML files that borrow most of their syntax from Dockerfiles. Most options can be set in either, but off-loading most of the work to compose files is useful because you&apos;ll be able to re-use parts across multiple containers. You can also specify <code>docker run</code> command line flags directly in compose files, making it much easier to set up a shared volume across a bunch of containers or to run multiple containers in the same virtual network.</p>
+<p>For a more complete overview of how docker-compose works, check out the <a href="https://docs.docker.com/compose/">documentation</a>.</p>
+<h1 class="mume-header" id="resources">Resources</h1>
+
+<ul>
+<li>The official docs: <a href="https://docs.docker.com/">https://docs.docker.com/</a></li>
+<li>A superb tutorial that walks through everything I&apos;ve covered (and more) in a very digestable format, highly recommended! <a href="https://docker-curriculum.com/">https://docker-curriculum.com/</a></li>
+<li>HandsOnDocker: self-paced labs. <a href="https://github.com/alexellis/handsondocker/">https://github.com/alexellis/handsondocker/</a></li>
+<li>Best practices for writing Dockerfiles: <a href="https://docs.docker.com/develop/develop-images/dockerfile_best-practices/">https://docs.docker.com/develop/develop-images/dockerfile_best-practices/</a></li>
+<li>Common mistakes:
+<ul>
+<li><a href="https://blog.developer.atlassian.com/common-dockerfile-mistakes/">https://blog.developer.atlassian.com/common-dockerfile-mistakes/</a></li>
+<li><a href="https://runnable.com/blog/9-common-dockerfile-mistakes">https://runnable.com/blog/9-common-dockerfile-mistakes</a></li>
+</ul>
+</li>
+</ul>
+<hr class="footnotes-sep">
+<section class="footnotes">
+<ol class="footnotes-list">
+<li id="fn1" class="footnote-item"><p>Technically this is only the case when you run docker on Linux. In Windows and MacOS, docker runs inside a Hyper-V VM, which still only utilises part of your system&apos;s hardware through virtualization. <a href="#fnref1" class="footnote-backref">&#x21A9;&#xFE0E;</a> <a href="#fnref1:1" class="footnote-backref">&#x21A9;&#xFE0E;</a></p>
+</li>
+<li id="fn2" class="footnote-item"><p>Busybox is a tiny image that provides various UNIX utilities. Note that it does not even contain <code>bash</code>, only <code>sh</code>. <a href="#fnref2" class="footnote-backref">&#x21A9;&#xFE0E;</a></p>
+</li>
+</ol>
+</section>
+
+      </div>
+      <div class="md-sidebar-toc"><ul>
+<li><a href="#a-brief-introduction-to-docker">A brief introduction to Docker</a>
+<ul>
+<li><a href="#a-few-definitions">A few definitions</a></li>
+<li><a href="#the-benefits-of-containers">The benefits of containers</a></li>
+<li><a href="#hello-world">Hello world!</a></li>
+<li><a href="#images">Images</a>
+<ul>
+<li><a href="#docker-hub">Docker Hub</a></li>
+<li><a href="#creating-images">Creating images</a></li>
+</ul>
+</li>
+<li><a href="#walking-before-running">Walking before <code>run</code>ning</a>
+<ul>
+<li><a href="#naming-containers">Naming containers</a></li>
+<li><a href="#interacting-with-containers">Interacting with containers</a></li>
+</ul>
+</li>
+<li><a href="#cleaning-up-after-yourself">Cleaning up after yourself</a></li>
+<li><a href="#dockerfiles">Dockerfiles</a>
+<ul>
+<li><a href="#cmd-vs-run-vs-entrypoint">CMD vs RUN vs ENTRYPOINT</a></li>
+<li><a href="#shell-form-vs-exec-form">Shell form vs exec form</a></li>
+<li><a href="#backslashes-in-shell-syntax">Backslashes in shell syntax</a></li>
+<li><a href="#best-practices-and-efficient-images">Best practices and efficient images</a></li>
+<li><a href="#background-processes">Background processes</a></li>
+</ul>
+</li>
+<li><a href="#managing-data">Managing data</a></li>
+<li><a href="#when-things-go-wrong">When things go wrong</a></li>
+<li><a href="#docker-compose">Docker-compose</a></li>
+</ul>
+</li>
+<li><a href="#resources">Resources</a></li>
+</ul>
+</div>
+      <a id="sidebar-toc-btn">&#x2261;</a>
+    
+    
+    
+    
+    
+    
+    
+    
+<script>
+document.body.setAttribute('html-show-sidebar-toc', true)
+var sidebarTOCBtn = document.getElementById('sidebar-toc-btn')
+sidebarTOCBtn.addEventListener('click', function(event) {
+  event.stopPropagation()
+  if (document.body.hasAttribute('html-show-sidebar-toc')) {
+    document.body.removeAttribute('html-show-sidebar-toc')
+  } else {
+    document.body.setAttribute('html-show-sidebar-toc', true)
+  }
+})
+</script>
+      
+  
+    </body></html>
