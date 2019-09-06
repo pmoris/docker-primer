@@ -528,7 +528,13 @@ pre[data-line] .line-highlight[data-end]:after {
 <p>Images are hierarchical. Most of the images you will create yourself will be based on a previous, more general parent image, often one of those Official Images, but perhaps in a certain situation it makes more sense to base an image on one of your own.</p>
 <p>You can list all of the images that are available on your system as follows:</p>
 <div class="code-chunk" data-id="code-chunk-id-1" data-cmd="bash"><div class="input-div"><pre data-role="codeBlock" data-info="bash {code_chunk_offset=1, cmd=true}" class="language-bash">docker image <span class="token function">ls</span>
-</pre><div class="btn-group"><div class="run-btn btn"><span>&#x25B6;&#xFE0E;</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><p>[todo]<br>
+</pre><div class="btn-group"><div class="run-btn btn"><span>&#x25B6;&#xFE0E;</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"><pre class="language-text">REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+messary             latest              29fa4d3157ff        4 days ago          1.87GB
+rocker/tidyverse    latest              220bd23f6d95        9 days ago          2.1GB
+python              slim                f96c28b7013f        10 days ago         179MB
+debian              latest              85c4fd36a543        3 weeks ago         114MB
+rocker/r-ver        3.4.4               833c07840603        7 months ago        606MB
+</pre></div></div><p>[todo]<br>
 <small>You might notice a bunch of duplicates tagged as <code>&lt;none&gt;</code>. Don&apos;t worry, these images only take up space once.</small></p>
 <p>And you can obtain a specific image manually using the <code>docker pull</code>. The names are formatted like  [todo],, version. Many images allow you to either specify a version or just use the latest available (stable) version (often labeled <code>latest</code> or <code>stable</code>). Some images also provide a <code>slim</code> version, these are usually light-weight images lacking most functionality apart from only those things that are required to run a specific application. These are a good bet if you want to reduce the file size of your images (but more on that later).</p>
 <p>Most of the time however, you won&apos;t be using the <code>pull</code> command yourself, instead, you&apos;ll either run a container based on an image directly and docker will download the required image automatically (as in the <em>Hello World</em> example) or you will build your own image based on a <code>Dockerfile</code>. We&apos;ll go over those in a bit, but let us first dive into <code>run</code> statements and existing images.</p>
@@ -546,13 +552,80 @@ pre[data-line] .line-highlight[data-end]:after {
                     <span class="token operator">&amp;&amp;</span> <span class="token function">cd</span> /var/ \
                     <span class="token operator">&amp;&amp;</span> <span class="token keyword">echo</span> <span class="token string">&quot;the contents of /var/ are&quot;</span> \
                     <span class="token operator">&amp;&amp;</span> <span class="token function">ls</span> -l
-</pre><div class="btn-group"><div class="run-btn btn"><span>&#x25B6;&#xFE0E;</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><p><small>If you&apos;re not familiar with the <code>&amp;&amp;</code> syntax, it is a way to chain multiple commands into one statement. Each subsequent command will only be executed after the previous one is finished (succesfully).</small></p>
+</pre><div class="btn-group"><div class="run-btn btn"><span>&#x25B6;&#xFE0E;</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"><pre class="language-text">The current working directory is /run/media/pieter/DATA/Wetenschap/Doctoraat/biodm/reboot2019/docker-primer
+the contents of /var/ are
+total 72
+drwxr-xr-x.  2 root root 4096 Apr 26 04:12 account
+drwxr-xr-x.  2 root root 4096 Feb 11  2019 adm
+drwxr-xr-x. 16 root root 4096 Aug 27 14:03 cache
+drwxr-xr-x.  2 root root 4096 Mar 22 10:42 crash
+drwxr-xr-x.  3 root root 4096 Apr 26 04:12 db
+drwxr-xr-x.  3 root root 4096 Apr 26 04:12 empty
+drwxr-xr-x.  2 root root 4096 Feb 11  2019 ftp
+drwxr-xr-x.  2 root root 4096 Feb 11  2019 games
+drwxr-xr-x.  3 root root 4096 Apr 24 17:53 kerberos
+drwxr-xr-x. 61 root root 4096 Aug 29 11:25 lib
+drwxr-xr-x.  2 root root 4096 Feb 11  2019 local
+lrwxrwxrwx.  1 root root   11 Apr 26 04:09 lock -&gt; ../run/lock
+drwxr-xr-x. 18 root root 4096 Sep  4 15:32 log
+lrwxrwxrwx.  1 root root   10 Feb 11  2019 mail -&gt; spool/mail
+drwxr-xr-x.  2 root root 4096 Feb 11  2019 nis
+drwxr-xr-x.  2 root root 4096 Feb 11  2019 opt
+drwxr-xr-x.  2 root root 4096 Feb 11  2019 preserve
+lrwxrwxrwx.  1 root root    6 Apr 26 04:09 run -&gt; ../run
+drwxr-xr-x. 12 root root 4096 Apr 26 04:12 spool
+drwxrwxrwt. 11 root root 4096 Sep  6 12:32 tmp
+drwxr-xr-x.  2 root root 4096 Feb 11  2019 yp
+</pre></div></div><p><small>If you&apos;re not familiar with the <code>&amp;&amp;</code> syntax, it is a way to chain multiple commands into one statement. Each subsequent command will only be executed after the previous one is finished (succesfully).</small></p>
 <p>To see a list of active containers, the <code>docker container ls</code> command can be used. What do you think we&apos;ll see when we run it at this point?</p>
 <div class="code-chunk" data-id="code-chunk-id-4" data-cmd="bash"><div class="input-div"><pre data-role="codeBlock" data-info="bash {code_chunk_offset=4, cmd=true}" class="language-bash">docker container <span class="token function">ls</span>
-</pre><div class="btn-group"><div class="run-btn btn"><span>&#x25B6;&#xFE0E;</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><p>If you guessed nothing, you were right. The list is still empty because the container shut down itself after running the final <code>ls -l</code> command. Containers do their job and then shut down.</p>
+</pre><div class="btn-group"><div class="run-btn btn"><span>&#x25B6;&#xFE0E;</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"><pre class="language-text">CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+</pre></div></div><p>If you guessed nothing, you were right. The list is still empty because the container shut down itself after running the final <code>ls -l</code> command. Containers do their job and then shut down.</p>
 <p>There is however a more useful variant of the <code>container ls</code> command that we can run:</p>
 <div class="code-chunk" data-id="code-chunk-id-5" data-cmd="bash"><div class="input-div"><pre data-role="codeBlock" data-info="bash {code_chunk_offset=5, cmd=true}" class="language-bash">docker container <span class="token function">ls</span> --all
-</pre><div class="btn-group"><div class="run-btn btn"><span>&#x25B6;&#xFE0E;</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><p>The <code>STATUS</code> column tells us when and how these containers exited (an exit status of 0 in linux means that a command was run without any problems arising).</p>
+</pre><div class="btn-group"><div class="run-btn btn"><span>&#x25B6;&#xFE0E;</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"><pre class="language-text">CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                    PORTS               NAMES
+f02a27f2d099        debian              &quot;ls -l /home&quot;            2 days ago          Exited (0) 2 days ago                         awesome_albattani
+f775b89f2e04        debian              &quot;tee cowabunga! /hom&#x2026;&quot;   2 days ago          Exited (0) 2 days ago                         pedantic_bouman
+b7c943f183d4        debian              &quot;ls -l /home&quot;            2 days ago          Exited (0) 2 days ago                         frosty_kepler
+d2bc6c6f7ca1        debian              &quot;tee cowabunga! /hom&#x2026;&quot;   2 days ago          Exited (0) 2 days ago                         cocky_perlman
+c34386303f93        debian              &quot;ls -l /home&quot;            2 days ago          Exited (0) 2 days ago                         gallant_matsumoto
+d30b687bc604        debian              &quot;tee cowabunga! /hom&#x2026;&quot;   2 days ago          Exited (0) 2 days ago                         adoring_hamilton
+5fb10b5fcf10        debian              &quot;bash&quot;                   2 days ago          Exited (0) 2 days ago                         eager_mccarthy
+54c6bb05fe11        debian              &quot;echo &apos;The current w&#x2026;&quot;   2 days ago          Exited (0) 2 days ago                         flamboyant_goldwasser
+6ca7e5e92623        debian              &quot;echo &apos;The current w&#x2026;&quot;   2 days ago          Exited (0) 2 days ago                         musing_ramanujan
+4c85ba05c13f        debian              &quot;bash&quot;                   2 days ago          Exited (0) 2 days ago                         determined_liskov
+a081f0f2d276        85c4fd36a543        &quot;/bin/sh -c &apos;apt-get&#x2026;&quot;   2 days ago          Exited (100) 2 days ago                       sleepy_dewdney
+2f5cea3f6a63        85c4fd36a543        &quot;/bin/sh -c &apos;apt-get&#x2026;&quot;   2 days ago          Exited (100) 2 days ago                       magical_villani
+feb6e92ee2f3        debian              &quot;ls -l /home&quot;            3 days ago          Exited (0) 3 days ago                         laughing_northcutt
+a2dde8c0442c        debian              &quot;ls -l /home&quot;            3 days ago          Exited (0) 3 days ago                         serene_snyder
+9acad044be2e        debian              &quot;tee cowabunga! /hom&#x2026;&quot;   3 days ago          Exited (0) 3 days ago                         laughing_mahavira
+df6809b1a34a        debian              &quot;tee cowabunga! /hom&#x2026;&quot;   3 days ago          Exited (0) 3 days ago                         distracted_maxwell
+1c5cee4ba0f3        debian              &quot;echo &apos;The current w&#x2026;&quot;   3 days ago          Exited (0) 3 days ago                         magical_wright
+1fd2cdd28311        85c4fd36a543        &quot;/bin/sh -c &apos;apt-get&#x2026;&quot;   3 days ago          Exited (100) 3 days ago                       condescending_keller
+26e776a7c481        debian              &quot;echo &apos;The current w&#x2026;&quot;   3 days ago          Exited (0) 3 days ago                         infallible_chaum
+dcb5f884d3fb        debian              &quot;ls -l /home&quot;            3 days ago          Exited (0) 3 days ago                         serene_agnesi
+9b0b78324d1c        debian              &quot;tee cowabunga /home&#x2026;&quot;   3 days ago          Exited (0) 3 days ago                         trusting_wing
+e834425652e4        debian              &quot;ls -l /home&quot;            3 days ago          Exited (0) 3 days ago                         elastic_feistel
+09c298c23b94        debian              &quot;tee cowabunga /home&#x2026;&quot;   3 days ago          Exited (0) 3 days ago                         amazing_heisenberg
+03524c31a963        debian              &quot;ls -l /home&quot;            3 days ago          Exited (0) 3 days ago                         laughing_antonelli
+d530cc1f8e68        debian              &quot;tee cowabunga /home&#x2026;&quot;   3 days ago          Exited (0) 3 days ago                         eager_agnesi
+aba1df662a88        debian              &quot;tee cowabunga /home&#x2026;&quot;   3 days ago          Exited (0) 3 days ago                         ecstatic_cerf
+3c82cdf06c91        debian              &quot;tee cowabunga /home&#x2026;&quot;   3 days ago          Exited (0) 3 days ago                         jolly_jang
+a6d9f7965600        debian              &quot;sudo tee cowabunga &#x2026;&quot;   3 days ago          Created                                       clever_visvesvaraya
+266aa61c8a24        debian              &quot;bash&quot;                   3 days ago          Exited (0) 3 days ago                         pensive_dhawan
+4147d531750c        debian              &quot;echo cowabunga&quot;         3 days ago          Exited (0) 3 days ago                         nice_lamarr
+fda831e1a3fb        debian              &quot;id&quot;                     3 days ago          Exited (0) 3 days ago                         silly_jang
+58ca4bfd2e19        debian              &quot;ls -l /bin&quot;             3 days ago          Exited (0) 3 days ago                         silly_lovelace
+672471665ae9        debian              &quot;ls -l /bin&quot;             3 days ago          Exited (0) 3 days ago                         peaceful_mendel
+46d37ecbbc6d        debian              &quot;ls -l /bin&quot;             3 days ago          Exited (0) 3 days ago                         amazing_lamport
+054ae222d402        debian              &quot;ls -l /bin&quot;             3 days ago          Exited (0) 3 days ago                         hopeful_ardinghelli
+be0e3c176291        debian              &quot;ls -l /bin&quot;             3 days ago          Exited (0) 3 days ago                         epic_colden
+edca0ca91c95        debian              &quot;echo &apos;The current w&#x2026;&quot;   3 days ago          Exited (0) 3 days ago                         lucid_nightingale
+a96596437be2        debian              &quot;echo &apos;The current w&#x2026;&quot;   3 days ago          Exited (0) 3 days ago                         magical_driscoll
+bae6cd3df8cf        debian              &quot;echo &apos;The current w&#x2026;&quot;   3 days ago          Exited (0) 3 days ago                         practical_beaver
+7a0c1129df9a        debian              &quot;pwd&quot;                    3 days ago          Exited (0) 3 days ago                         kind_clarke
+ee1b5d04d07d        debian              &quot;bash&quot;                   3 days ago          Exited (0) 3 days ago                         strange_yalow
+</pre></div></div><p>The <code>STATUS</code> column tells us when and how these containers exited (an exit status of 0 in linux means that a command was run without any problems arising).</p>
 <p>All of this brings us to one of the most important aspects of docker containers.</p>
 <blockquote>
 <p><strong>Docker containers are ephemeral.</strong></p>
@@ -561,7 +634,8 @@ pre[data-line] .line-highlight[data-end]:after {
 <p>We can demonstrate this behaviour by running two containers in a row.</p>
 <div class="code-chunk" data-id="code-chunk-id-6" data-cmd="bash"><div class="input-div"><pre data-role="codeBlock" data-info="bash {code_chunk_offset=6, cmd=true}" class="language-bash">docker run debian <span class="token function">tee</span> <span class="token string">&apos;cowabunga!&apos;</span> /home/pizza
 docker run debian <span class="token function">ls</span> -l /home
-</pre><div class="btn-group"><div class="run-btn btn"><span>&#x25B6;&#xFE0E;</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><p><em>Always keep this in the back of your mind. It will be extremely important when you start relying on containers to produce (and hopefully store) the output of a certain analysis.</em></p>
+</pre><div class="btn-group"><div class="run-btn btn"><span>&#x25B6;&#xFE0E;</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"><pre class="language-text">total 0
+</pre></div></div><p><em>Always keep this in the back of your mind. It will be extremely important when you start relying on containers to produce (and hopefully store) the output of a certain analysis.</em></p>
 <h3 class="mume-header" id="naming-containers">Naming containers</h3>
 
 <p>Docker containers are given an ID automatically (e.g. <code>7a0c1129df9a</code>), but this is rather cumbersome. Instead, you can use the <code>--name</code> flag to specify your own name to refer to a specific container.</p>
@@ -702,7 +776,16 @@ ENTRYPOINT [&quot;bash&quot;, &quot;./scripts/pizza-time.sh&quot;]
 <div class="code-chunk" data-id="code-chunk-id-7" data-cmd="bash"><div class="input-div"><pre data-role="codeBlock" data-info="bash {code_chunk_offset=7, cmd=true}" class="language-bash"><span class="token function">mkdir</span> -P bind_mount_test
 <span class="token function">touch</span> bind_mount_test/krang
 docker run -it --rm -v /my/local/dir:/container/dir
-</pre><div class="btn-group"><div class="run-btn btn"><span>&#x25B6;&#xFE0E;</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><p>What is important to take note of here is that the bind mount will override anything that is in your container. For example, suppose we have a statement like <code>COPY . /src</code> in our Dockerfile (which would initialise a directory in the image located in <code>/src</code> containing all files in your local working directory). However, when you bind mount something on top of <code>/src</code>, it will override its contents. This ensures that you never accidentally wipe data on your host machine by replacing it with things inside an image. Remember, the image is self-sufficient and contains all information it would ever require, your host machine is not.</p>
+</pre><div class="btn-group"><div class="run-btn btn"><span>&#x25B6;&#xFE0E;</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"><pre class="language-text">mkdir: invalid option -- &apos;P&apos;
+Try &apos;mkdir --help&apos; for more information.
+touch: cannot touch &apos;bind_mount_test/krang&apos;: No such file or directory
+&quot;docker run&quot; requires at least 1 argument.
+See &apos;docker run --help&apos;.
+
+Usage:  docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
+
+Run a command in a new container
+</pre></div></div><p>What is important to take note of here is that the bind mount will override anything that is in your container. For example, suppose we have a statement like <code>COPY . /src</code> in our Dockerfile (which would initialise a directory in the image located in <code>/src</code> containing all files in your local working directory). However, when you bind mount something on top of <code>/src</code>, it will override its contents. This ensures that you never accidentally wipe data on your host machine by replacing it with things inside an image. Remember, the image is self-sufficient and contains all information it would ever require, your host machine is not.</p>
 <p>Also note that the first filepath (the one on the host machine), cannot be a relative path, it must be the full filepath.</p>
 <p>Named volumes are the second type of volume. Instead of mounting a host directory, they simply give a name to a directory inside of your container. After the container is finished (and/or removed), the volume will remain. You can then later mount it again or retrieve data from it directly. They use the same syntax as bind mounts, but replace the first filepath into a name, e.g. <code>-v my_volume:/my/container/path</code>.</p>
 <p>Finally, there is also an option to copy data directly into a <em>running</em> container: <a href="https://docs.docker.com/engine/reference/commandline/cp/">https://docs.docker.com/engine/reference/commandline/cp/</a>.</p>
